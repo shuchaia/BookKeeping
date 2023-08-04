@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.example.bookkeeping.adapter.RecordPagerAdapter;
 import com.example.bookkeeping.frag_record.IncomeFragment;
+import com.example.bookkeeping.frag_record.BaseRecordFragment;
 import com.example.bookkeeping.frag_record.OutcomeFragment;
 import com.google.android.material.tabs.TabLayout;
 

@@ -8,15 +8,19 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 import com.example.bookkeeping.R;
+import com.example.bookkeeping.UniteApp;
+import com.example.bookkeeping.db.DBManager;
+import com.example.bookkeeping.entity.Type;
 
-public class IncomeFragment extends Fragment {
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+public class IncomeFragment extends BaseRecordFragment {
+    public static final int kind = 1;
+
     public IncomeFragment() {
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_income, container, false);
+        super(kind);
     }
 }

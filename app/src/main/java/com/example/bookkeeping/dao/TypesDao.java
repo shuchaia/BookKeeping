@@ -23,4 +23,7 @@ public interface TypesDao {
 
     @Query("SELECT * FROM type_tb where kind=:kind")
     public List<Type> getTypeList(int kind);
+
+    @Query("SELECT * FROM type_tb")
+    public List<Type> getAllTypes();
 }

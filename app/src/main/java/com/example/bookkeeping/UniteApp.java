@@ -2,7 +2,7 @@ package com.example.bookkeeping;
 
 import android.app.Application;
 
-import com.example.bookkeeping.frag_record.DBManager;
+import com.example.bookkeeping.db.DBManager;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
