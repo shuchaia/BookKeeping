@@ -24,6 +24,7 @@
 
         <ImageView
                 android:id="@+id/main_iv_search"
+                android:onClick="onClick"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:src="@mipmap/search"
@@ -46,6 +47,7 @@
 
     <ImageButton
             android:id="@+id/main_btn_more"
+            android:onClick="onClick"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@mipmap/more"
@@ -57,6 +59,7 @@
 
     <Button
             android:id="@+id/main_btn_edit"
+            android:onClick="onClick"
             android:layout_width="80dp"
             android:layout_height="50dp"
             android:layout_alignBottom="@+id/main_btn_more"
