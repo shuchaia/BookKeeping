@@ -5,6 +5,8 @@
     <string name="month_in">本月剩余</string>
     <string name="budge">预算剩余</string>
     <string name="to_chart">查看图表分析</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_remark">添加备注</string>
+    <string name="remark">点击输入备注</string>
+    <string name="ensure">确定</string>
+    <string name="cancel">取消</string>
 </resources>

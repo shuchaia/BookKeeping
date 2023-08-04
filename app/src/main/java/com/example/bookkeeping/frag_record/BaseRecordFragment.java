@@ -5,9 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.room.util.StringUtil;
 
-import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.bookkeeping.R;
@@ -34,12 +33,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-public class BaseRecordFragment extends Fragment {
+public class BaseRecordFragment extends Fragment implements View.OnClickListener {
 
     KeyboardView keyboardView;
-    EditText moneyEt;
+    EditText moneyEt, beizhuEt;
     ImageView typeIv;
-    TextView typeTv, beizhuTv, timeTv;
+    TextView typeTv, timeTv;
     GridView typeGv;
 
     List<Type> typeList;
@@ -149,7 +148,7 @@ public class BaseRecordFragment extends Fragment {
         typeIv = view.findViewById(R.id.frag_record_iv);
         typeGv = view.findViewById(R.id.frag_record_gv);
         typeTv = view.findViewById(R.id.frag_record_tv_type);
-        beizhuTv = view.findViewById(R.id.frag_record_tv_beizhu);
+        beizhuEt = view.findViewById(R.id.frag_record_tv_beizhu);
         timeTv = view.findViewById(R.id.frag_record_tv_time);
 
         // 设置显示默认分类
@@ -173,8 +172,9 @@ public class BaseRecordFragment extends Fragment {
             float money = Float.parseFloat(moneyStr);
             account.setMoney(money);
             account.setKind(kind);
-            if (TextUtils.isEmpty(beizhuTv.getText().toString())) {
-                account.setBeizhu(beizhuTv.getText().toString());
+            String beizhu = beizhuEt.getText().toString().trim();
+            if (!TextUtils.isEmpty(beizhu)) {
+                account.setBeizhu(beizhu);
             }
             // 获取记录的信息，保存在数据库当中
             ExecutorService executorService = UniteApp.getExecutorService();
@@ -184,5 +184,39 @@ public class BaseRecordFragment extends Fragment {
             // 返回上一级页面
             getActivity().finish();
         });
+
+        beizhuEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    // 把软键盘收起来
+                    keyBoardUtils.hideKeyboard();
+                    // 将布局贴近屏幕底部
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                    RelativeLayout rl = view.findViewById(R.id.frag_record_rl);
+                    rl.setLayoutParams(params);
+                }else {
+                    keyBoardUtils.showKeyboard();
+                    // 将布局置于软键盘之上
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    params.addRule(RelativeLayout.ABOVE, R.id.frag_record_keyboard);
+                    RelativeLayout rl = view.findViewById(R.id.frag_record_rl);
+                    rl.setLayoutParams(params);
+                }
+            }
+        });
+
+        // 给时间设置点击时间
+        // 通过点击弹出时间框，修改记录的时间
+        timeTv.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.frag_record_tv_time:
+                break;
+        }
     }
 }

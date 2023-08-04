@@ -1,10 +1,12 @@
 package com.example.bookkeeping.utils;
 
+import android.content.Context;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.text.Editable;
 import android.text.InputType;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.example.bookkeeping.R;
@@ -13,6 +15,17 @@ public class KeyBoardUtils {
     private final Keyboard keyboard;
     private KeyboardView keyboardView;
     private EditText editText;
+
+
+    /**
+     * 关闭系统软键盘
+     *
+     * @param view
+     */
+    public static void closeKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
 
     public interface onEnsureListener{
         public void onEnsure();
@@ -100,7 +113,7 @@ public class KeyBoardUtils {
     };
 
 
-    // 显示键盘
+    // 显示自定义软键盘
     public void showKeyboard(){
         int visibility = keyboardView.getVisibility();
         if (visibility == View.INVISIBLE || visibility == View.GONE) {
@@ -108,6 +121,7 @@ public class KeyBoardUtils {
         }
     }
 
+    // 隐藏自定义软键盘
     public void hideKeyboard(){
         int visibility = keyboardView.getVisibility();
         if (visibility == View.INVISIBLE || visibility == View.VISIBLE) {
