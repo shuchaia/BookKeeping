@@ -28,7 +28,7 @@
                 android:layout_toRightOf="@+id/frag_record_iv"
                 android:layout_centerVertical="true"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
         <EditText
                 android:id="@+id/frag_record_et_money"
@@ -84,8 +84,18 @@
                 android:id="@+id/frag_record_tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2020年10月30日 18:49"
+                android:text="18:49"
                 android:layout_alignParentRight="true"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"/>
+
+        <TextView
+                android:id="@+id/frag_record_tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2023年08月11日"
+                android:layout_toLeftOf="@+id/frag_record_tv_time"
                 android:padding="10dp" />
 
         <EditText
@@ -94,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:hint="点击添加备注"
                 android:background="@color/white"
-                android:layout_toLeftOf="@id/frag_record_tv_time"
+                android:layout_toLeftOf="@id/frag_record_tv_date"
                 android:padding="10dp" />
 
     </RelativeLayout>

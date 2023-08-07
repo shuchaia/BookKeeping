@@ -88,8 +88,15 @@ public class RecordActivity extends AppCompatActivity {
 
     EditText editText = null;
 
+    /**
+     * 通过当前点击的位置判断是否应该隐藏键盘
+     * @param v 当前触摸的view
+     * @param event 触摸事件MotionEvent.ACTION_DOWN，内包含触摸的初始位置
+     * @return
+     */
     public boolean isShouldHideInput(View v, MotionEvent event) {
         if (v != null && (v instanceof EditText)) {
+            // v是EditText
             editText = (EditText) v;
             int[] leftTop = {0, 0};
             //获取输入框当前的location位置
@@ -98,9 +105,16 @@ public class RecordActivity extends AppCompatActivity {
             int top = leftTop[1];
             int bottom = top + v.getHeight();
             int right = left + v.getWidth();
+            // event.getX()和event.getY()获得当前触摸的X-Y坐标
+            // 在EditText的范围内 left < x < right && top < y < bottom
+            // !(event.getX() > left && event.getX() < right && event.getY() > top && event.getY() < bottom) == false
+            // 此时不需要隐藏软键盘
+
+            // 当前触摸的坐标不在EditText的范围内 -> return true
             return !(event.getX() > left && event.getX() < right
                     && event.getY() > top && event.getY() < bottom);
         }
+        // v不是EditText了，直接返回false
         return false;
     }
 }

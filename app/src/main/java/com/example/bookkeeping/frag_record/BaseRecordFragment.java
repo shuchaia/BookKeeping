@@ -1,9 +1,11 @@
 package com.example.bookkeeping.frag_record;
 
+import android.graphics.drawable.Drawable;
 import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
@@ -21,6 +23,8 @@ import com.example.bookkeeping.UniteApp;
 import com.example.bookkeeping.db.DBManager;
 import com.example.bookkeeping.entity.Account;
 import com.example.bookkeeping.entity.Type;
+import com.example.bookkeeping.fragment.DatePickerFragment;
+import com.example.bookkeeping.fragment.TimePickerFragment;
 import com.example.bookkeeping.utils.KeyBoardUtils;
 
 import java.text.SimpleDateFormat;
@@ -38,7 +42,7 @@ public class BaseRecordFragment extends Fragment implements View.OnClickListener
     KeyboardView keyboardView;
     EditText moneyEt, beizhuEt;
     ImageView typeIv;
-    TextView typeTv, timeTv;
+    TextView typeTv, timeTv, dateTv;
     GridView typeGv;
 
     List<Type> typeList;
@@ -88,7 +92,8 @@ public class BaseRecordFragment extends Fragment implements View.OnClickListener
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
         String time = simpleDateFormat.format(date);
-        timeTv.setText(time);
+        timeTv.setText(time.split(" ")[1]);
+        dateTv.setText(time.split(" ")[0]);
         account.setTime(time);
 
         Calendar calendar = Calendar.getInstance();
@@ -149,7 +154,13 @@ public class BaseRecordFragment extends Fragment implements View.OnClickListener
         typeGv = view.findViewById(R.id.frag_record_gv);
         typeTv = view.findViewById(R.id.frag_record_tv_type);
         beizhuEt = view.findViewById(R.id.frag_record_tv_beizhu);
+        dateTv = view.findViewById(R.id.frag_record_tv_date);
         timeTv = view.findViewById(R.id.frag_record_tv_time);
+
+        Drawable drawable = getResources().getDrawable(R.mipmap.down);
+        drawable.setBounds(0,0,24,24);
+        dateTv.setCompoundDrawables(null, null, drawable,null);
+        timeTv.setCompoundDrawables(null, null, drawable,null);
 
         // 设置显示默认分类
         if (kind == 0) {
@@ -176,6 +187,7 @@ public class BaseRecordFragment extends Fragment implements View.OnClickListener
             if (!TextUtils.isEmpty(beizhu)) {
                 account.setBeizhu(beizhu);
             }
+            account.setTime(dateTv.getText().toString() + " " + timeTv.getText().toString());
             // 获取记录的信息，保存在数据库当中
             ExecutorService executorService = UniteApp.getExecutorService();
             Runnable runnableTask = () -> DBManager.tallyDatabase.accountsDao().insertAccounts(account);
@@ -185,9 +197,7 @@ public class BaseRecordFragment extends Fragment implements View.OnClickListener
             getActivity().finish();
         });
 
-        beizhuEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
+        beizhuEt.setOnFocusChangeListener((v, hasFocus)->{
                 if (hasFocus) {
                     // 把软键盘收起来
                     keyBoardUtils.hideKeyboard();
@@ -205,10 +215,11 @@ public class BaseRecordFragment extends Fragment implements View.OnClickListener
                     rl.setLayoutParams(params);
                 }
             }
-        });
+        );
 
         // 给时间设置点击时间
         // 通过点击弹出时间框，修改记录的时间
+        dateTv.setOnClickListener(this);
         timeTv.setOnClickListener(this);
     }
 
@@ -216,7 +227,22 @@ public class BaseRecordFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.frag_record_tv_time:
+                // 弹出时间选择对话框 改变textView的值
+                showTimePickerDialog(timeTv);
+                break;
+            case R.id.frag_record_tv_date:
+                showDatePickerDialog(dateTv, account);
                 break;
         }
+    }
+
+    private void showTimePickerDialog(TextView timeTv) {
+        DialogFragment newFragment = new TimePickerFragment(timeTv);
+        newFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
+    }
+
+    private void showDatePickerDialog(TextView dateTv, Account account) {
+        DialogFragment newFragment = new DatePickerFragment(dateTv, account);
+        newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
 }
