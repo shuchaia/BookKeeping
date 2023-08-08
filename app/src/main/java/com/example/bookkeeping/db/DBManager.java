@@ -5,8 +5,10 @@ import android.content.Context;
 import androidx.room.Room;
 
 import com.example.bookkeeping.R;
+import com.example.bookkeeping.dao.AccountsDao;
 import com.example.bookkeeping.dao.TypesDao;
 import com.example.bookkeeping.db.TallyDatabase;
+import com.example.bookkeeping.entity.Account;
 import com.example.bookkeeping.entity.Type;
 
 import java.util.ArrayList;
@@ -15,12 +17,15 @@ import java.util.List;
 public class DBManager {
     public static TallyDatabase tallyDatabase;
     private static TypesDao typesDao;
+    private static AccountsDao accountsDao;
 
     public static void initDB(Context context) {
         tallyDatabase = Room.databaseBuilder(context, TallyDatabase.class, "tally.db")
                 .addMigrations()
                 .build();
         typesDao = tallyDatabase.typesDao();
+        accountsDao = tallyDatabase.accountsDao();
+
         if (typesDao.getAllTypes() == null || typesDao.getAllTypes().size() == 0) {
             typesDao.insertTypes(new Type("其他", R.mipmap.ic_qita,R.mipmap.ic_qita_fs,0),
                     new Type("餐饮", R.mipmap.ic_canyin,R.mipmap.ic_canyin_fs,0),
@@ -52,7 +57,17 @@ public class DBManager {
     }
 
     public static List<Type> getTypeList(int kind) {
-        List<Type> list = typesDao.getTypeList(kind);
-        return list;
+        return typesDao.getTypeList(kind);
+    }
+
+    /**
+     * 获得数据库中某一天的具体记录
+     * @param year
+     * @param month
+     * @param day
+     * @return
+     */
+    public static List<Account> getAccountsByTime(int year, int month, int day){
+        return accountsDao.getAccountsByTime(year, month, day);
     }
 }

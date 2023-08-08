@@ -24,4 +24,7 @@ public interface AccountsDao {
 
     @Query("SELECT * FROM account_tb")
     public List<Account> getAllTypes();
+
+    @Query("SELECT * FROM account_tb where year = :year AND month = :month AND day = :day ORDER BY id DESC")
+    public List<Account> getAccountsByTime(int year, int month, int day);
 }

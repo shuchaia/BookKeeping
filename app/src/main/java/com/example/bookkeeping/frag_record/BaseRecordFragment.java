@@ -90,7 +90,7 @@ public class BaseRecordFragment extends Fragment implements View.OnClickListener
      */
     private void initTime() {
         Date date = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String time = simpleDateFormat.format(date);
         timeTv.setText(time.split(" ")[1]);
         dateTv.setText(time.split(" ")[0]);

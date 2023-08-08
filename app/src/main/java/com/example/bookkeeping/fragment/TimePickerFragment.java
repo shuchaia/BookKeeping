@@ -37,9 +37,8 @@ public class TimePickerFragment extends DialogFragment
         int minute = c.get(Calendar.MINUTE);
 
         // Create a new instance of TimePickerDialog and return it
-        MyTimePickerDialog timePickerDialog = new MyTimePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog,this, hour, minute,
+        return new MyTimePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Light_Dialog,this, hour, minute,
                 DateFormat.is24HourFormat(getActivity()));
-        return timePickerDialog;
     }
 
     @Override

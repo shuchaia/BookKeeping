@@ -20,8 +20,6 @@ public class UniteApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        // 初始化数据库对象
-        // new Thread(()->{DBManager.initDB(getApplicationContext());}).start();
 
         // 使用Executor框架初始化数据库对象
         // 1. 创建Runnable接口并重写run()方法
