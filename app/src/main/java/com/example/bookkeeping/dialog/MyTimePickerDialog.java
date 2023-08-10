@@ -1,24 +1,17 @@
 package com.example.bookkeeping.dialog;
 
 import android.app.AlertDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.KeyboardShortcutGroup;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.widget.TimePicker;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.example.bookkeeping.R;
-
-import java.util.List;
 
 public class MyTimePickerDialog extends AlertDialog implements DialogInterface.OnClickListener,
         TimePicker.OnTimeChangedListener {
@@ -63,7 +56,7 @@ public class MyTimePickerDialog extends AlertDialog implements DialogInterface.O
 
         final Context themeContext = getContext();
         final LayoutInflater inflater = LayoutInflater.from(themeContext);
-        final View view = inflater.inflate(R.layout.time_picker_dialog, null);
+        final View view = inflater.inflate(R.layout.dialog_time_picker, null);
         setView(view);
         setButton(BUTTON_POSITIVE, themeContext.getString(R.string.ensure), this);
         setButton(BUTTON_NEGATIVE, themeContext.getString(R.string.cancel), this);

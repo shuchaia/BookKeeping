@@ -13,17 +13,17 @@ import java.util.List;
 @Dao
 public interface TypesDao {
     @Insert
-    public void insertTypes(Type... types);
+    void insertTypes(Type... types);
 
     @Delete
-    public void deleteTypes(Type... types);
+    void deleteTypes(Type... types);
 
     @Update
-    public void updateTypes(Type... types);
+    void updateTypes(Type... types);
 
     @Query("SELECT * FROM type_tb where kind=:kind")
-    public List<Type> getTypeList(int kind);
+    List<Type> getTypeList(int kind);
 
     @Query("SELECT * FROM type_tb")
-    public List<Type> getAllTypes();
+    List<Type> getAllTypes();
 }

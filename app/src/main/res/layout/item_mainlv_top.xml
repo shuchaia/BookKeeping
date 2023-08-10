@@ -80,7 +80,7 @@
                     android:layout_alignBottom="@id/item_mainlv_top_tv2" />
 
             <TextView
-                    android:id="@+id/item_mainlv_top_tv4"
+                    android:id="@+id/item_mainlv_top_tv_analysis"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@mipmap/ih_biaoge"
@@ -101,6 +101,7 @@
             android:text="今日支出 ￥0 收入 ￥0"
             android:textStyle="bold"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp" />
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"/>
 
 </LinearLayout>

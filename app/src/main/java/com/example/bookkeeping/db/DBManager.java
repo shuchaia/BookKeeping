@@ -1,7 +1,9 @@
 package com.example.bookkeeping.db;
 
 import android.content.Context;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.room.Room;
 
 import com.example.bookkeeping.R;
@@ -13,12 +15,18 @@ import com.example.bookkeeping.entity.Type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class DBManager {
     public static TallyDatabase tallyDatabase;
     private static TypesDao typesDao;
     private static AccountsDao accountsDao;
 
+    /**
+     * 初始化数据库
+     * @param context
+     */
     public static void initDB(Context context) {
         tallyDatabase = Room.databaseBuilder(context, TallyDatabase.class, "tally.db")
                 .addMigrations()
@@ -56,6 +64,11 @@ public class DBManager {
         }
     }
 
+    /**
+     * 获取所有收支分类
+     * @param kind
+     * @return
+     */
     public static List<Type> getTypeList(int kind) {
         return typesDao.getTypeList(kind);
     }
@@ -69,5 +82,57 @@ public class DBManager {
      */
     public static List<Account> getAccountsByTime(int year, int month, int day){
         return accountsDao.getAccountsByTime(year, month, day);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static float getTotalMoney(int year, int month, int day, int kind){
+        float total = 0.0f;
+        List<Account> accounts = accountsDao.getAccountsByTimeAndKind(year, month, day, kind);
+        List<Float> moneyList = accounts.stream().map(Account::getMoney).collect(Collectors.toList());
+        float sum = 0.0f;
+        for (Float money : moneyList) {
+            sum += money;
+        }
+        total = sum;
+        return total;
+    }
+
+    /**
+     * 获取某一月某分类的总金额
+     * @param year
+     * @param month
+     * @param kind
+     * @return
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static float getTotalMoney(int year, int month, int kind){
+        float total = 0.0f;
+        List<Account> accounts = accountsDao.getAccountsByTimeAndKind(year, month, kind);
+        List<Float> moneyList = accounts.stream().map(Account::getMoney).collect(Collectors.toList());
+        float sum = 0.0f;
+        for (Float money : moneyList) {
+            sum += money;
+        }
+        total = sum;
+        return total;
+    }
+
+    /**
+     * 获取某一年某分类的总金额
+     * @param year
+     * @param kind
+     * @return
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static float getTotalMoney(int year, int kind){
+        float total = 0.0f;
+        List<Account> accounts = accountsDao.getAccountsByTimeAndKind(year, kind);
+        List<Float> moneyList = accounts.stream().map(Account::getMoney).collect(Collectors.toList());
+        float sum = 0.0f;
+        for (Float money : moneyList) {
+            sum += money;
+        }
+        total = sum;
+        return total;
     }
 }
