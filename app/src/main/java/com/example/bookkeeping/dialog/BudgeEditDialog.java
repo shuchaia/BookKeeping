@@ -1,5 +1,6 @@
 package com.example.bookkeeping.dialog;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +11,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -34,8 +36,31 @@ public class BudgeEditDialog extends Dialog {
 
     onEnsureListener onEnsureListener;
 
+    Activity activity;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        dialogBudgetEt.requestFocus();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                KeyBoardUtils.showSoftInput(activity);
+            }
+        }, 200);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        dialogBudgetEt.clearFocus();
+        KeyBoardUtils.closeSoftInput(activity);
+    }
+
     public interface onEnsureListener {
         void onEnsure(float money);
+
     }
 
     public void setOnEnsureListener(BudgeEditDialog.onEnsureListener onEnsureListener) {
@@ -44,6 +69,7 @@ public class BudgeEditDialog extends Dialog {
 
     public BudgeEditDialog(@NonNull Context context) {
         super(context);
+        activity = (Activity) context;
     }
 
     @Override
@@ -70,46 +96,6 @@ public class BudgeEditDialog extends Dialog {
         cancelBtn.setOnClickListener(v -> dismiss());
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // 异步打开软键盘
-        ExecutorService executorService = UniteApp.getExecutorService();
-        executorService.execute(() -> {
-            dialogBudgetEt.setFocusable(true);
-            dialogBudgetEt.setFocusableInTouchMode(true);
-            dialogBudgetEt.requestFocus();
-
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.toggleSoftInput(0,InputMethodManager.HIDE_NOT_ALWAYS);
-                }
-            }, 100);
-        });
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        // 异步关闭软键盘
-        ExecutorService executorService = UniteApp.getExecutorService();
-        executorService.execute(() -> {
-            dialogBudgetEt.clearFocus();
-
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.toggleSoftInput(0,InputMethodManager.HIDE_NOT_ALWAYS);
-                }
-            }, 100);
-        });
-    }
-
     public void setDialogSize() {
         Window window = getWindow();
 
@@ -117,15 +103,5 @@ public class BudgeEditDialog extends Dialog {
         layoutParams.gravity = Gravity.CENTER;
         window.setBackgroundDrawableResource(android.R.color.transparent);
         window.setAttributes(layoutParams);
-        // handler.sendEmptyMessageDelayed(1,100);
     }
-
-    Handler handler = new Handler(){
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            //自动弹出软键盘的方法
-            InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.toggleSoftInput(0,InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    };
 }

@@ -1,65 +1,88 @@
 package com.example.bookkeeping;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
-import com.example.bookkeeping.adapter.RecordPagerAdapter;
-import com.example.bookkeeping.frag_record.IncomeFragment;
-import com.example.bookkeeping.frag_record.OutcomeFragment;
+import com.example.bookkeeping.adapter.AccountAdapter;
+import com.example.bookkeeping.db.DBManager;
+import com.example.bookkeeping.entity.Account;
 import com.example.bookkeeping.utils.KeyBoardUtils;
-import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
-public class RecordActivity extends AppCompatActivity {
-    TabLayout tabLayout;
-    ViewPager viewPager;
+public class SearchActivity extends AppCompatActivity {
+    ListView searchLv;
+    EditText searchEt;
+    RelativeLayout emptyTv;
 
+    // 数据源
+    List<Account> mDatas;
+    AccountAdapter adapter;
+
+    // 多线程
+    ExecutorService executorService;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_record);
+        setContentView(R.layout.activity_search);
+        initView();
+        mDatas = new ArrayList<>();
+        adapter = new AccountAdapter(this, mDatas);
+        searchLv.setAdapter(adapter);
+        // 设置无数据时，显示的布局
+        searchLv.setEmptyView(emptyTv);
 
-        // 查找控件
-        tabLayout = findViewById(R.id.record_tabs);
-        viewPager = findViewById(R.id.record_vp);
-
-        // 设置viewpager加载的页面
-        initPager();
+        // 初始化多线程执行器
+        executorService = UniteApp.getExecutorService();
     }
 
-    private void initPager() {
-        // 初始化两个fragment的集合
-        List<Fragment> fragmentList = new ArrayList<>();
-        // 支出在前，收入在后
-        OutcomeFragment outcomeFragment = new OutcomeFragment();
-        IncomeFragment incomeFragment = new IncomeFragment();
-        fragmentList.add(outcomeFragment);
-        fragmentList.add(incomeFragment);
-
-        // 创建适配器
-        RecordPagerAdapter pagerAdapter = new RecordPagerAdapter(getSupportFragmentManager(), fragmentList);
-        // 设置适配器对象
-        viewPager.setAdapter(pagerAdapter);
-
-        // 将tabLayout和viewPager关联
-        tabLayout.setupWithViewPager(viewPager);
+    private void initView() {
+        searchLv = findViewById(R.id.search_lv);
+        searchEt = findViewById(R.id.search_et);
+        emptyTv = findViewById(R.id.search_tv_empty);
     }
 
-    // 叉号的点击事件
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.record_iv_back:
+            case R.id.search_iv_back:
                 finish();
+                break;
+            case R.id.search_iv_sh:
+                String keyword = searchEt.getText().toString().trim();
+                if (TextUtils.isEmpty(keyword)) {
+                    Toast.makeText(this, "请输入搜索关键字", Toast.LENGTH_SHORT).show();
+                }
+                // 根据keyword去数据库搜索
+                Future<List<Account>> future = executorService.submit(() -> DBManager.getAccountsLikeKeyword(keyword));
+                List<Account> list = null;
+                try {
+                    list = future.get();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                mDatas.clear();
+                mDatas.addAll(list);
+                adapter.notifyDataSetChanged();
                 break;
         }
     }

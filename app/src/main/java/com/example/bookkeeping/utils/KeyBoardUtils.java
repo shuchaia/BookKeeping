@@ -1,5 +1,6 @@
 package com.example.bookkeeping.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
@@ -20,15 +21,25 @@ public class KeyBoardUtils {
     /**
      * 关闭系统软键盘
      *
-     * @param view
+     * @param activity
      */
-    public static void closeKeyboard(View view) {
-        InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    public static void closeSoftInput(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    /**
+     * 打开系统软键盘
+     * @param activity
+     */
+    public static void showSoftInput(Activity activity){
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        //inputMethodManager.showSoftInput(activity.getCurrentFocus(), InputMethodManager.SHOW_FORCED);
     }
 
     public interface onEnsureListener{
-        public void onEnsure();
+        void onEnsure();
     }
     onEnsureListener onEnsureListener;
 

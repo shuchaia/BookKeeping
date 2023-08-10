@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
@@ -19,6 +20,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -67,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     AccountAdapter adapter;
     private int year, month, dayOfMonth;
 
+    // 多线程
+    ExecutorService executorService;
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * 初始化主页面控件
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void initView() {
         todayLv = findViewById(R.id.main_lv);
         searchIv = findViewById(R.id.main_iv_search);
@@ -104,6 +110,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         moreBtn.setOnClickListener(this);
         editBtn.setOnClickListener(this);
         searchIv.setOnClickListener(this);
+        todayLv.setOnItemLongClickListener((parent, view, position, id) -> {
+            if (position == 0){
+                // 当前被点击的是头布局
+                return false;
+            }
+            int pos = position - 1;
+            // 获取被点击的信息
+            Account account = mDatas.get(pos);
+            // 弹框询问是否要删除
+            showDeleteItemDialog(account);
+            return true;
+        });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void showDeleteItemDialog(Account account) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog cancelItemDialog = builder.setMessage("确定要删除这条账单吗？删除后不可恢复")
+                .setNegativeButton("取消", null)
+                .setPositiveButton("确定", (dialog, which) -> {
+                    // 确定删除
+                    // 从数据库中删除记录
+                    UniteApp.getExecutorService().execute(() -> DBManager.delectAccount(account));
+                    // 从数据源中删除记录
+                    mDatas.remove(account);
+                    adapter.notifyDataSetChanged(); // 更新listView中的信息
+                    setTopTvShow(); // 更新头布局的信息
+                }).create();
+        cancelItemDialog.setOnShowListener((dialog) -> {
+            Button positiveBtn = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+            Button negativeBtn = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_NEGATIVE);
+            positiveBtn.setBackground(getResources().getDrawable(R.drawable.dialog_ensurebtn_bg));
+            positiveBtn.setTextColor(Color.BLACK);
+            negativeBtn.setTextColor(Color.BLACK);
+        });
+        cancelItemDialog.show();
     }
 
     /**
@@ -134,28 +176,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
 
-        // 加载数据库信息
         LocalDateTime dateTime = LocalDateTime.now();
-        ExecutorService executorService = UniteApp.getExecutorService();
+        executorService = UniteApp.getExecutorService();
         year = dateTime.getYear();
         month = dateTime.getMonthValue();
         dayOfMonth = dateTime.getDayOfMonth();
+        loadDBData();
 
-        // 获得今天的记录
-        Callable<List<Account>> getDailyRecords = () -> DBManager.getAccountsByTime(year, month, dayOfMonth);
-        Future<List<Account>> future = executorService.submit(getDailyRecords);
-        List<Account> list = null;
-        try {
-            list = future.get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        mDatas.clear();
-        mDatas.addAll(list);
-        adapter.notifyDataSetChanged();
+        setTopTvShow();
+    }
 
+    /**
+     * 设置listview的头布局的数据
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void setTopTvShow() {
         // 获取本月的支出情况
         Callable<Float> getMonthlyOutput = () -> DBManager.getTotalMoney(year, month, 0);
         Callable<Float> getMonthlyInput = () -> DBManager.getTotalMoney(year, month, 1);
@@ -190,13 +225,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         topBudgetTv.setText("￥ "+(money - monthlyOutput));
     }
 
+    /**
+     * 加载数据源mData
+     */
+    private void loadDBData() {
+        // 加载数据库信息
+        // 获得今天的记录
+        Callable<List<Account>> getDailyRecords = () -> DBManager.getAccountsByTime(year, month, dayOfMonth);
+        Future<List<Account>> future = executorService.submit(getDailyRecords);
+        List<Account> list = null;
+        try {
+            list = future.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mDatas.clear();
+        mDatas.addAll(list);
+        adapter.notifyDataSetChanged();
+    }
+
     public void onClick(View view) {
+        Intent intent = null;
         switch (view.getId()) {
             case R.id.main_iv_search:
+                // 跳转二级页面 通过分类名或备注模糊查询
+                intent = new Intent(this, SearchActivity.class); // 跳转到搜索页面
                 break;
             case R.id.main_btn_edit:
-                Intent intent = new Intent(this, RecordActivity.class); // 跳转到记录页面
-                startActivity(intent);
+                intent = new Intent(this, RecordActivity.class); // 跳转到记录页面
                 break;
             case R.id.main_btn_more:
                 break;
@@ -209,6 +267,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.item_mainlv_top_tv_analysis:
         }
+
+        if (intent != null){
+            startActivity(intent);
+        }
     }
 
     /**
@@ -216,6 +278,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void showBudgetEditDialog() {
         BudgeEditDialog dialog = new BudgeEditDialog(this);
+        dialog.setContentView(R.layout.dialog_budget);
+
         dialog.show();
         dialog.setDialogSize();
         

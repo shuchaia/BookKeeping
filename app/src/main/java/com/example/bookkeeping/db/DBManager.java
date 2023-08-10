@@ -135,4 +135,12 @@ public class DBManager {
         total = sum;
         return total;
     }
+
+    public static void delectAccount(Account... accounts){
+        accountsDao.deleteAccounts(accounts);
+    }
+
+    public static List<Account> getAccountsLikeKeyword(String keyword){
+        return accountsDao.getAccountsLikeKeyword("%"+keyword+"%");
+    }
 }

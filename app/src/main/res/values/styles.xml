@@ -13,8 +13,4 @@
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:backgroundDimAmount">0</item>
     </style>
-
-    <style name="DialogStyleWithKeyboard" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="android:windowSoftInputMode">stateVisible</item>
-    </style>
 </resources>

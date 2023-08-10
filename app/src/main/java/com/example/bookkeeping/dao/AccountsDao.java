@@ -36,4 +36,10 @@ public interface AccountsDao {
 
     @Query("SELECT * FROM account_tb where year = :year AND month = :month AND day = :day AND kind = :kind")
     List<Account> getAccountsByTimeAndKind(int year, int month, int day, int kind);
+
+    // 可以通过加单引号的方式把%跟keyword拼接
+    //@Query("SELECT * FROM account_tb where beizhu LIKE '%'+(:keyword)+'%' OR type_name LIKE '%'+(:keyword)+'%'")
+    //直接在DBManger里拼接，这里传入的keyword本身就带有%
+    @Query("SELECT * FROM account_tb where beizhu LIKE :keyword OR type_name LIKE :keyword")
+    List<Account> getAccountsLikeKeyword(String keyword);
 }
