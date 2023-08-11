@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.example.bookkeeping.AboutActivity;
+import com.example.bookkeeping.HistoryActivity;
 import com.example.bookkeeping.R;
 import com.example.bookkeeping.SettingActivity;
 
@@ -59,11 +60,11 @@ public class MoreDialog extends Dialog implements View.OnClickListener {
                 intent = new Intent(getContext(), SettingActivity.class);
                 break;
             case R.id.dialog_more_btn_history:
+                intent = new Intent(getContext(), HistoryActivity.class);
                 break;
             case R.id.dialog_more_btn_info:
                 break;
             case R.id.dialog_more_iv:
-                break;
         }
         if (intent != null) {
             getContext().startActivity(intent);

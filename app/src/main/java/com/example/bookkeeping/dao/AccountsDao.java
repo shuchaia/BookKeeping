@@ -42,4 +42,10 @@ public interface AccountsDao {
     //直接在DBManger里拼接，这里传入的keyword本身就带有%
     @Query("SELECT * FROM account_tb where beizhu LIKE :keyword OR type_name LIKE :keyword")
     List<Account> getAccountsLikeKeyword(String keyword);
+
+    @Query("SELECT * FROM account_tb where year = :year AND month = :month ORDER BY day")
+    List<Account> getMonthlyAccounts(int year, int month);
+
+    @Query("SELECT DISTINCT year FROM account_tb ORDER BY year DESC")
+    List<Integer> getYears();
 }

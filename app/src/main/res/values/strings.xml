@@ -13,10 +13,11 @@
     <string name="edit_budget">设置预算</string>
     <string name="hint_edit_budget">点击设置预算</string>
     <string name="please_input_keyword">请输入关键字</string>
-    <string name="data_empty">数据为空，无此类记录</string>
+    <string name="data_empty">数据为空，请添加记录</string>
     <string name="about">关于</string>
     <string name="settings">设置</string>
     <string name="history">历史记录</string>
     <string name="info">账单详情</string>
     <string name="about_app_info">应用信息</string>
+    <string name="history_info">本月账单记录</string>
 </resources>

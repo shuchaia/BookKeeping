@@ -46,9 +46,8 @@
         <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginLeft="10dp"
-                android:layout_alignParentRight="true">
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="10dp">
 
             <TextView
                     android:id="@+id/item_mainlv_tv_money"
@@ -56,8 +55,8 @@
                     android:layout_height="wrap_content"
                     android:text="￥12000.0"
                     android:textStyle="bold"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true" />
+                    android:layout_alignParentRight="true"
+                    android:gravity="right" />
 
             <TextView
                     android:id="@+id/item_mainlv_tv_time"
@@ -68,5 +67,6 @@
                     android:layout_marginTop="5dp"
                     android:layout_alignParentRight="true" />
         </RelativeLayout>
+
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

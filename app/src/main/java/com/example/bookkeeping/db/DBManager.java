@@ -137,9 +137,20 @@ public class DBManager {
     }
 
     /**
-     * 删除几条记录
-     * @param accounts
+     * 获取某一月份中的所有记录
+     * @param year
+     * @param month
+     * @return
      */
+    public static List<Account> getMonthlyAccounts(int year, int month){
+        return accountsDao.getMonthlyAccounts(year, month);
+    }
+
+
+        /**
+         * 删除几条记录
+         * @param accounts
+         */
     public static void delectAccount(Account... accounts){
         accountsDao.deleteAccounts(accounts);
     }
@@ -159,5 +170,13 @@ public class DBManager {
     public static void clearAllAccounts(){
         List<Account> allAccounts = accountsDao.getAllAccounts();
         accountsDao.deleteAccounts(allAccounts.toArray(new Account[0]));
+    }
+
+    /**
+     * 获取记录数据中的所有年份信息（已去重）
+     * @return
+     */
+    public static List<Integer> getYears(){
+        return accountsDao.getYears();
     }
 }

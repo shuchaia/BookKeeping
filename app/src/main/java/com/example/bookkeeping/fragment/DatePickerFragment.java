@@ -38,7 +38,7 @@ public class DatePickerFragment extends DialogFragment
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
         // Do something with the date chosen by the user
-        dateTv.setText(String.format("%04d", year)+"年"+String.format("%02d", month+1)+"月"+String.format("%02d", day)+"日");
+        dateTv.setText(String.format("%04d", year)+"-"+String.format("%02d", month+1)+"-"+String.format("%02d", day));
         account.setYear(year);
         account.setMonth(month+1);
         account.setDay(day);

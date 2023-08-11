@@ -2,6 +2,7 @@ package com.example.bookkeeping.adapter;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,8 +70,10 @@ public class AccountAdapter extends BaseAdapter {
         // 设置不同时间的显示方式
         if (dateTime.toLocalDate().toString().equals(account.getTime().split(" ")[0])) {
             holder.timeTV.setText("今天 "+account.getTime().split(" ")[1]);
-        }else if (dateTime.minusDays(1).toLocalDate().toString().equals(account.getTime().split(" ")[0])){
+            Log.d("kaifa", "今天");
+        }else if (dateTime.minusDays(1L).toLocalDate().toString().equals(account.getTime().split(" ")[0])){
             holder.timeTV.setText("昨天 "+account.getTime().split(" ")[1]);
+            Log.d("kaifa", "昨天");
         }else {
             holder.timeTV.setText(account.getTime());
         }
