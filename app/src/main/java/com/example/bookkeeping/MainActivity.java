@@ -35,6 +35,7 @@ import android.widget.Toast;
 import com.example.bookkeeping.adapter.AccountAdapter;
 import com.example.bookkeeping.db.DBManager;
 import com.example.bookkeeping.dialog.BudgeEditDialog;
+import com.example.bookkeeping.dialog.MoreDialog;
 import com.example.bookkeeping.entity.Account;
 import com.example.bookkeeping.utils.KeyBoardUtils;
 
@@ -48,6 +49,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+// TODO 用XPopup代替dialog
+// Link: https://github.com/li-xiaojun/XPopup
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     // 主页面控件
     ListView todayLv;
@@ -110,6 +113,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         moreBtn.setOnClickListener(this);
         editBtn.setOnClickListener(this);
         searchIv.setOnClickListener(this);
+
+        // TODO 用SwipeMenuListView优化成侧滑删除
+        // Link: https://github.com/baoyongzhang/SwipeMenuListView
         todayLv.setOnItemLongClickListener((parent, view, position, id) -> {
             if (position == 0){
                 // 当前被点击的是头布局
@@ -246,6 +252,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         adapter.notifyDataSetChanged();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     public void onClick(View view) {
         Intent intent = null;
         switch (view.getId()) {
@@ -257,6 +264,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(this, RecordActivity.class); // 跳转到记录页面
                 break;
             case R.id.main_btn_more:
+                MoreDialog moreDialog = new MoreDialog(this);
+                moreDialog.show();
+                moreDialog.setDialogSize();
                 break;
             case R.id.item_mainlv_top_tv_budget:
                 showBudgetEditDialog();

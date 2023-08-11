@@ -23,7 +23,7 @@ public interface AccountsDao {
     void updateAccounts(Account... accounts);
 
     @Query("SELECT * FROM account_tb")
-    List<Account> getAllTypes();
+    List<Account> getAllAccounts();
 
     @Query("SELECT * FROM account_tb where year = :year AND month = :month AND day = :day ORDER BY id DESC")
     List<Account> getAccountsByTime(int year, int month, int day);

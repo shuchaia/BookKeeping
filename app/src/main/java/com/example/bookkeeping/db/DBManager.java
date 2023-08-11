@@ -136,11 +136,28 @@ public class DBManager {
         return total;
     }
 
+    /**
+     * 删除几条记录
+     * @param accounts
+     */
     public static void delectAccount(Account... accounts){
         accountsDao.deleteAccounts(accounts);
     }
 
+    /**
+     * 根据关键字搜索记录
+     * @param keyword
+     * @return
+     */
     public static List<Account> getAccountsLikeKeyword(String keyword){
         return accountsDao.getAccountsLikeKeyword("%"+keyword+"%");
+    }
+
+    /**
+     * 清空所有记账记录
+     */
+    public static void clearAllAccounts(){
+        List<Account> allAccounts = accountsDao.getAllAccounts();
+        accountsDao.deleteAccounts(allAccounts.toArray(new Account[0]));
     }
 }
