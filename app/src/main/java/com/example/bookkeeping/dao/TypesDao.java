@@ -8,6 +8,7 @@ import androidx.room.Update;
 
 import com.example.bookkeeping.entity.Type;
 
+import java.nio.file.WatchEvent;
 import java.util.List;
 
 @Dao
@@ -21,7 +22,10 @@ public interface TypesDao {
     @Update
     void updateTypes(Type... types);
 
-    @Query("SELECT * FROM type_tb where kind=:kind")
+    @Query("SELECT * FROM type_tb WHERE type_name='添加' AND kind=:kind")
+    Type getAddType(int kind);
+
+    @Query("SELECT * FROM type_tb WHERE kind=:kind")
     List<Type> getTypeList(int kind);
 
     @Query("SELECT * FROM type_tb")

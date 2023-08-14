@@ -1,5 +1,6 @@
 package com.example.bookkeeping.frag_record;
 
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
@@ -17,10 +18,13 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.bookkeeping.R;
 import com.example.bookkeeping.UniteApp;
 import com.example.bookkeeping.db.DBManager;
+import com.example.bookkeeping.dialog.AddTypeDialog;
 import com.example.bookkeeping.entity.Account;
 import com.example.bookkeeping.entity.Type;
 import com.example.bookkeeping.fragment.DatePickerFragment;
@@ -51,8 +55,9 @@ public class BaseRecordFragment extends Fragment implements View.OnClickListener
     int kind;
 
     TypeBaseAdapter adapter;
+    private AddTypeDialog addTypeDialog;
 
-    public BaseRecordFragment(int kind){
+    public BaseRecordFragment(int kind) {
         this.kind = kind;
     }
 
@@ -63,9 +68,9 @@ public class BaseRecordFragment extends Fragment implements View.OnClickListener
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 设置默认分类
-        if (kind == 0){
+        if (kind == 0) {
             account = new Account("其他", R.mipmap.ic_qita_fs);
-        }else if (kind == 1){
+        } else if (kind == 1) {
             account = new Account("其他", R.mipmap.in_qt_fs);
         }
     }
@@ -115,12 +120,44 @@ public class BaseRecordFragment extends Fragment implements View.OnClickListener
             // 更新输入框的分类名和图标
             Type type = typeList.get(position);
 
-            typeTv.setText(type.getTypeName());
-            account.setTypeName(type.getTypeName());
+            String typeName = type.getTypeName();
+            if (!"添加".equals(typeName)) {
+                typeTv.setText(typeName);
+                account.setTypeName(typeName);
 
-            typeIv.setImageResource(type.getsImageId());
-            account.setsImageId(type.getsImageId());
+                typeIv.setImageResource(type.getsImageId());
+                account.setsImageId(type.getsImageId());
+            } else {
+                showAddTypeDialog(type.getKind());
+            }
         }));
+    }
+
+    /**
+     * 弹出添加新分类对话框
+     *
+     * @param kind
+     */
+    private void showAddTypeDialog(int kind) {
+        addTypeDialog.setContentView(R.layout.dialog_add_type);
+
+        addTypeDialog.show();
+        addTypeDialog.setDialogSize();
+
+        addTypeDialog.setOnEnsureListener(typeName -> {
+            if (TextUtils.isEmpty(typeName)) {
+                Toast.makeText(getContext(), "请输入分类名！", Toast.LENGTH_SHORT);
+            }
+
+            Type newType = null;
+            if (kind == 0) {
+                newType = new Type(typeName, R.mipmap.ic_new, R.mipmap.ic_new_fs, kind);
+            } else {
+                newType = new Type(typeName, R.mipmap.ic_new, R.mipmap.in_new_fs, kind);
+            }
+            Type finalNewType = newType;
+            UniteApp.getExecutorService().execute(() -> DBManager.addTypes(finalNewType));
+        });
     }
 
     /**
@@ -157,15 +194,15 @@ public class BaseRecordFragment extends Fragment implements View.OnClickListener
         timeTv = view.findViewById(R.id.frag_record_tv_time);
 
         Drawable drawable = getResources().getDrawable(R.mipmap.down);
-        drawable.setBounds(0,0,24,24);
-        dateTv.setCompoundDrawables(null, null, drawable,null);
-        timeTv.setCompoundDrawables(null, null, drawable,null);
+        drawable.setBounds(0, 0, 24, 24);
+        dateTv.setCompoundDrawables(null, null, drawable, null);
+        timeTv.setCompoundDrawables(null, null, drawable, null);
 
         // 设置显示默认分类
         if (kind == 0) {
-            typeIv.setImageResource(R.mipmap.ic_qita_fs);
-        }else if (kind == 1){
-            typeIv.setImageResource(R.mipmap.in_qt_fs);
+            Glide.with(getContext()).load(R.mipmap.ic_qita_fs).override(80).into(typeIv);
+        } else if (kind == 1) {
+            Glide.with(getContext()).load(R.mipmap.in_qt_fs).override(80).into(typeIv);
         }
 
         // 显示软键盘
@@ -173,7 +210,7 @@ public class BaseRecordFragment extends Fragment implements View.OnClickListener
         keyBoardUtils.showKeyboard();
 
         // 设置接口监听
-        keyBoardUtils.setOnEnsureListener(()->{
+        keyBoardUtils.setOnEnsureListener(() -> {
             // 获取当前输入框中输入的金额
             String moneyStr = moneyEt.getText().toString();
             if (!TextUtils.isEmpty(moneyStr)) {
@@ -196,8 +233,28 @@ public class BaseRecordFragment extends Fragment implements View.OnClickListener
             getActivity().finish();
         });
 
-        beizhuEt.setOnFocusChangeListener((v, hasFocus)->{
-                if (hasFocus) {
+        beizhuEt.setOnFocusChangeListener((v, hasFocus) -> {
+                    if (hasFocus) {
+                        // 把软键盘收起来
+                        keyBoardUtils.hideKeyboard();
+                        // 将布局贴近屏幕底部
+                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                        RelativeLayout rl = view.findViewById(R.id.frag_record_rl);
+                        rl.setLayoutParams(params);
+                    } else {
+                        keyBoardUtils.showKeyboard();
+                        // 将布局置于软键盘之上
+                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        params.addRule(RelativeLayout.ABOVE, R.id.frag_record_keyboard);
+                        RelativeLayout rl = view.findViewById(R.id.frag_record_rl);
+                        rl.setLayoutParams(params);
+                    }
+                }
+        );
+
+        addTypeDialog = new AddTypeDialog(getContext());
+        addTypeDialog.setOnShowListener(dialog -> {
                     // 把软键盘收起来
                     keyBoardUtils.hideKeyboard();
                     // 将布局贴近屏幕底部
@@ -205,16 +262,17 @@ public class BaseRecordFragment extends Fragment implements View.OnClickListener
                     params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                     RelativeLayout rl = view.findViewById(R.id.frag_record_rl);
                     rl.setLayoutParams(params);
-                }else {
-                    keyBoardUtils.showKeyboard();
-                    // 将布局置于软键盘之上
-                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                    params.addRule(RelativeLayout.ABOVE, R.id.frag_record_keyboard);
-                    RelativeLayout rl = view.findViewById(R.id.frag_record_rl);
-                    rl.setLayoutParams(params);
                 }
-            }
         );
+
+        addTypeDialog.setOnDismissListener(dialog -> {
+            keyBoardUtils.showKeyboard();
+            // 将布局置于软键盘之上
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.ABOVE, R.id.frag_record_keyboard);
+            RelativeLayout rl = view.findViewById(R.id.frag_record_rl);
+            rl.setLayoutParams(params);
+        });
 
         // 给时间设置点击时间
         // 通过点击弹出时间框，修改记录的时间

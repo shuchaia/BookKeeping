@@ -23,4 +23,6 @@
     <string name="analysis">图表分析</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="type_name">分类名称:</string>
+    <string name="add_type">添加分类</string>
 </resources>

@@ -28,6 +28,14 @@ public class Type {
     }
 
     @Ignore
+    public Type(String typeName, int imageId, int sImageId, int kind) {
+        this.typeName = typeName;
+        this.imageId = imageId;
+        this.sImageId = sImageId;
+        this.kind = kind;
+    }
+
+    @Ignore
     public Type(String typeName, int imageId, int sImageId, int kind, String colorString) {
         this.typeName = typeName;
         this.imageId = imageId;

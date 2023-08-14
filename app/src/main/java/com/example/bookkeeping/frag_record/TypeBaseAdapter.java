@@ -1,6 +1,8 @@
 package com.example.bookkeeping.frag_record;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +10,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.bookkeeping.R;
+import com.example.bookkeeping.UniteApp;
+import com.example.bookkeeping.db.DBManager;
+import com.example.bookkeeping.dialog.AddTypeDialog;
+import com.example.bookkeeping.dialog.BudgeEditDialog;
 import com.example.bookkeeping.entity.Type;
 
 import java.util.List;
@@ -52,15 +59,17 @@ public class TypeBaseAdapter extends BaseAdapter {
 
         //获取指定位置的数据源
         Type type = typeList.get(position);
-        tv.setText(type.getTypeName());
-
+        String typeName = type.getTypeName();
+        tv.setText(typeName);
         // 判断当前位置是否被选中
         if (selectPos == position) {
-            iv.setImageResource(type.getsImageId());
-        }else {
-            iv.setImageResource(type.getImageId());
+            // iv.setImageResource(type.getsImageId());
+            Glide.with(context).load(type.getsImageId()).override(80).into(iv);
+        } else {
+            // iv.setImageResource(type.getImageId());
+            Glide.with(context).load(type.getImageId()).override(80).into(iv);
         }
-
         return convertView;
     }
+
 }
