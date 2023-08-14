@@ -31,39 +31,39 @@
 
 ### 1. 主页面
 
-![activity_main](.\sreenshot\activity_main.png)
+![activity_main](./sreenshot/activity_main.png)
 
 ### 2. 搜索页面
 
-![activity_search](.\sreenshot\activity_search.png)
+![activity_search](./sreenshot/activity_search.png)
 
 ### 3. 记录页面
 
-![activity_record_out](.\sreenshot\activity_record_out.png)
+![activity_record_out](./sreenshot/activity_record_out.png)
 
-![activity_record_in](.\sreenshot\activity_record_in.png)
+![activity_record_in](./sreenshot/activity_record_in.png)
 
-![activity_record_select_date](.\sreenshot\activity_record_select_date.png)
+![activity_record_select_date](./sreenshot/activity_record_select_date.png)
 
-![activity_record_select_time](.\sreenshot\activity_record_select_time.png)
+![activity_record_select_time](./sreenshot/activity_record_select_time.png)
 
-![activity_record_add_remark](.\sreenshot\activity_record_add_remark.png)
+![activity_record_add_remark](./sreenshot/activity_record_add_remark.png)
 
 ### 4. 设置页面
 
-![activity_settings](.\sreenshot\activity_settings.png)
+![activity_settings](./sreenshot/activity_settings.png)
 
 ### 5. 关于页面
 
-![activity_about](.\sreenshot\activity_about.png)
+![activity_about](./sreenshot/activity_about.png)
 
 ### 6. 分析页面
 
-![activity_analysis_out1](.\sreenshot\activity_analysis_out1.png)
+![activity_analysis_out1](./sreenshot/activity_analysis_out1.png)
 
-![activity_analysis_out2](.\sreenshot\activity_analysis_out2.png)
+![activity_analysis_out2](./sreenshot/activity_analysis_out2.png)
 
-![activity_analysis_in1](.\sreenshot\activity_analysis_in1.png)
+![activity_analysis_in1](./sreenshot/activity_analysis_in1.png)
 
-![activity_analysis_in2](.\sreenshot\activity_analysis_in2.png)
+![activity_analysis_in2](./sreenshot/activity_analysis_in2.png)
 
