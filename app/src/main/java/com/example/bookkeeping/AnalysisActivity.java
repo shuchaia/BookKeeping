@@ -17,6 +17,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.bookkeeping.db.DBManager;
+import com.example.bookkeeping.dialog.CalendarDialog;
 import com.example.bookkeeping.entity.Type;
 import com.example.bookkeeping.frag_analysis.BaseAnalysisFragment;
 import com.example.bookkeeping.frag_analysis.IncomeFragment;
@@ -51,12 +52,16 @@ public class AnalysisActivity extends AppCompatActivity {
 
     RadioGroup radioGroup;
     TextView dateTv;
-    Fragment[] mFragments;
-    int mIndex;
+    Fragment curFragment;
 
     private int year;
     private int month;
     private int day;
+    int selectYearPos = 0;
+    int selectMonthPos = -1;
+    int mIndex = 0;
+
+    Bundle bundle;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -67,7 +72,7 @@ public class AnalysisActivity extends AppCompatActivity {
 
         initTime();
         initView();
-        changeFragment(new OutcomeFragment());
+        changeFragment(OutcomeFragment.newInstance(bundle));
     }
 
     private void changeFragment(Fragment fm) {
@@ -75,6 +80,7 @@ public class AnalysisActivity extends AppCompatActivity {
         FragmentTransaction transaction = supportFragmentManager.beginTransaction();
         transaction.replace(R.id.analysis_content, fm);
         transaction.commit();
+        curFragment = fm;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -83,6 +89,10 @@ public class AnalysisActivity extends AppCompatActivity {
         year = localDateTime.getYear();
         month = localDateTime.getMonthValue();
         day = localDateTime.getDayOfMonth();
+        bundle = new Bundle();
+        bundle.putInt("year", year);
+        bundle.putInt("month", month);
+        bundle.putInt("day", day);
     }
 
     private void initView() {
@@ -98,6 +108,7 @@ public class AnalysisActivity extends AppCompatActivity {
             for (int i = 0; i < group.getChildCount(); i++) {
                 RadioButton rb = (RadioButton) group.getChildAt(i);
                 if (rb.isChecked()){
+                    mIndex = i;
                     setIndexSelected(i);
                     break;
                 }
@@ -108,23 +119,35 @@ public class AnalysisActivity extends AppCompatActivity {
     private void setIndexSelected(int index) {
         switch (index) {
             case 0:
-                changeFragment(new OutcomeFragment());
+                changeFragment(OutcomeFragment.newInstance(bundle));
                 break;
             case 1:
-                changeFragment(new IncomeFragment());
+                changeFragment(IncomeFragment.newInstance(bundle));
                 break;
         }
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.analysis_iv_back:
                 finish();
                 break;
             case R.id.analysis_tv_select_date:
-                // TODO 弹出calendar对话框
+                //  弹出calendar对话框
                 Log.d("kaifa", "select date");
+                CalendarDialog dialog = new CalendarDialog(this, selectYearPos, selectMonthPos);
+                dialog.show();
+                dialog.setDialogSize();
+                dialog.setOnRefreshListener((selPos, year, month) -> {
+                    dateTv.setText(year + "年" + String.format("%02d", month) + "月");
+                    bundle.putInt("year", year);
+                    bundle.putInt("month", month);
+                    setIndexSelected(mIndex);
+                    selectYearPos = selPos;
+                    selectMonthPos = month - 1;
+                });
                 break;
         }
     }

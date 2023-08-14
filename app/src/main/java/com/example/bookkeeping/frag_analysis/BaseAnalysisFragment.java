@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.bookkeeping.AnalysisActivity;
 import com.example.bookkeeping.R;
 import com.example.bookkeeping.UniteApp;
 import com.example.bookkeeping.db.DBManager;
@@ -71,20 +72,22 @@ public class BaseAnalysisFragment extends Fragment {
     public BaseAnalysisFragment() {
         // Required empty public constructor
     }
-
-    public static BaseAnalysisFragment newInstance() {
-
-        Bundle args = new Bundle();
+/*
+    public static BaseAnalysisFragment newInstance(Bundle bundle) {
 
         BaseAnalysisFragment fragment = new BaseAnalysisFragment();
-        fragment.setArguments(args);
+        fragment.setArguments(bundle);
         return fragment;
-    }
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        year = getArguments().getInt("year");
+        month = getArguments().getInt("month");
+        day = getArguments().getInt("day");
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -95,11 +98,10 @@ public class BaseAnalysisFragment extends Fragment {
             parent.removeView(view);
         }
         view = inflater.inflate(R.layout.fragment_base_analysis, container, false);
-        initTime();
         initView();
 
         // 造数据
-        initData();
+        loadData();
 
         loadDataToChart();
         loadDataToView();
@@ -163,13 +165,6 @@ public class BaseAnalysisFragment extends Fragment {
         return colors;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void initTime() {
-        LocalDateTime localDateTime = LocalDateTime.now();
-        year = localDateTime.getYear();
-        month = localDateTime.getMonthValue();
-        day = localDateTime.getDayOfMonth();
-    }
 
     private void initView() {
 
@@ -200,7 +195,7 @@ public class BaseAnalysisFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void initData() {
+    public void loadData() {
         /*barEntries = new ArrayList<>();
         barEntries.add(new BarEntry(0f, 30f));
         barEntries.add(new BarEntry(1f, 30f));

@@ -25,7 +25,7 @@ public class PieChartUtils {
         //设置中间文字
         pieChart.setDrawCenterText(false);//是否绘制中间的文字
 
-        pieChart.setNoDataText("暂无数据");// 如果没有数据的时候，会显示这个，类似ListView的EmptyView
+        pieChart.setNoDataText("暂无数据，去添加一条记录吧~");// 如果没有数据的时候，会显示这个，类似ListView的EmptyView
 
         // 输入标签样式
         pieChart.setEntryLabelColor(Color.GRAY);//设置绘制Label的颜色
