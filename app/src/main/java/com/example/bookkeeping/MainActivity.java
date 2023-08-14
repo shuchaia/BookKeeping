@@ -276,6 +276,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 toggleShow();
                 break;
             case R.id.item_mainlv_top_tv_analysis:
+                // 跳转到分析页面
+                intent = new Intent(this, AnalysisActivity.class);
+                break;
         }
 
         if (intent != null){

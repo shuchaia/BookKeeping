@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7db7ec605201404965896912f36bb839",
+    "identityHash": "6c0da96626f0517225e27d7942e4fdd5",
     "entities": [
       {
         "tableName": "type_tb",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type_name` TEXT, `image_id` INTEGER NOT NULL, `s_image_id` INTEGER NOT NULL, `kind` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type_name` TEXT, `image_id` INTEGER NOT NULL, `s_image_id` INTEGER NOT NULL, `color_string` TEXT, `kind` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -31,6 +31,12 @@
             "columnName": "s_image_id",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "colorString",
+            "columnName": "color_string",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "kind",
@@ -126,7 +132,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7db7ec605201404965896912f36bb839')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6c0da96626f0517225e27d7942e4fdd5')"
     ]
   }
 }

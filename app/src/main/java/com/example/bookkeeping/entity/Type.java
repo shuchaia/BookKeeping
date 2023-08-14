@@ -19,17 +19,29 @@ public class Type {
     @ColumnInfo(name = "s_image_id")
     public int sImageId;
 
+    @ColumnInfo(name = "color_string")
+    public String colorString;
+
     public int kind;
 
     public Type() {
     }
 
     @Ignore
-    public Type(String typeName, int imageId, int sImageId, int kind) {
+    public Type(String typeName, int imageId, int sImageId, int kind, String colorString) {
         this.typeName = typeName;
         this.imageId = imageId;
         this.sImageId = sImageId;
+        this.colorString = colorString;
         this.kind = kind;
+    }
+
+    public String getColorString() {
+        return colorString;
+    }
+
+    public void setColorString(String colorString) {
+        this.colorString = colorString;
     }
 
     public int getId() {

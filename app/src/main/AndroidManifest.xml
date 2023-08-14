@@ -15,6 +15,7 @@
         <activity android:name=".AboutActivity" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".RecordActivity" />
+        <activity android:name=".AnalysisActivity" />
         <activity
                 android:name=".MainActivity"
                 android:windowSoftInputMode="stateAlwaysHidden">

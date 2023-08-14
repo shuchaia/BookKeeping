@@ -28,13 +28,13 @@ public interface AccountsDao {
     @Query("SELECT * FROM account_tb where year = :year AND month = :month AND day = :day ORDER BY id DESC")
     List<Account> getAccountsByTime(int year, int month, int day);
 
-    @Query("SELECT * FROM account_tb where year = :year AND month = :month AND kind = :kind")
+    @Query("SELECT * FROM account_tb where year = :year AND month = :month AND kind = :kind ORDER BY month")
     List<Account> getAccountsByTimeAndKind(int year, int month, int kind);
 
-    @Query("SELECT * FROM account_tb where year = :year AND kind = :kind")
+    @Query("SELECT * FROM account_tb where year = :year AND kind = :kind ORDER BY year")
     List<Account> getAccountsByTimeAndKind(int year, int kind);
 
-    @Query("SELECT * FROM account_tb where year = :year AND month = :month AND day = :day AND kind = :kind")
+    @Query("SELECT * FROM account_tb where year = :year AND month = :month AND day = :day AND kind = :kind ORDER BY day")
     List<Account> getAccountsByTimeAndKind(int year, int month, int day, int kind);
 
     // 可以通过加单引号的方式把%跟keyword拼接
@@ -48,4 +48,7 @@ public interface AccountsDao {
 
     @Query("SELECT DISTINCT year FROM account_tb ORDER BY year DESC")
     List<Integer> getYears();
+
+    @Query("SELECT * FROM account_tb where year = :year AND month = :month AND kind =:kind AND type_name =:typeName ORDER BY day")
+    List<Account> getAccountsByTimeAndKindAndType(int year, int month, int kind, String typeName);
 }

@@ -53,6 +53,10 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    // 画分析图
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    // 用于加载图片
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
 
     // Room
     def room_version = "2.2.5"
