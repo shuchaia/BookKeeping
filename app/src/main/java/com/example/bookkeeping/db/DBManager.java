@@ -35,7 +35,6 @@ public class DBManager {
         typesDao = tallyDatabase.typesDao();
         accountsDao = tallyDatabase.accountsDao();
 
-        // TODO 给每个分类添加颜色值
         if (typesDao.getAllTypes() == null || typesDao.getAllTypes().size() == 0) {
             typesDao.insertTypes(new Type("其他", R.mipmap.ic_qita,R.mipmap.ic_qita_fs,0,"#5b9bd5"),
                     new Type("餐饮", R.mipmap.ic_canyin,R.mipmap.ic_canyin_fs,0,"#ed7d31"),
