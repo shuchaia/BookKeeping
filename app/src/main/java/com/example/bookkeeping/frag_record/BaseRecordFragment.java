@@ -68,7 +68,6 @@ public class BaseRecordFragment extends Fragment implements View.OnClickListener
         }else if (kind == 1){
             account = new Account("其他", R.mipmap.in_qt_fs);
         }
-
     }
 
     @Override

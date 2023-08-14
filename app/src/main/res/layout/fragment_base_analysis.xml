@@ -79,7 +79,7 @@
                                 android:layout_alignParentRight="true">
 
                             <TextView
-                                    android:id="@+id/analysis_tv2"
+                                    android:id="@+id/analysis_daily_output"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="日均支出(元)"
@@ -87,10 +87,10 @@
 
                             <TextView
                                     android:id="@+id/analysis_daily_output_money"
-                                    android:layout_below="@id/analysis_tv2"
+                                    android:layout_below="@id/analysis_daily_output"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignRight="@+id/analysis_tv2"
+                                    android:layout_alignRight="@+id/analysis_daily_output"
                                     android:gravity="end"
                                     android:textStyle="bold"
                                     android:text="0.00"
@@ -114,6 +114,7 @@
                                 android:layout_alignParentLeft="true">
 
                             <TextView
+                                    android:id="@+id/analysis_compare_tv"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="比上月支出(元)"
@@ -208,7 +209,7 @@
                 <com.github.mikephil.charting.charts.PieChart
                         android:id="@+id/analysis_piechart"
                         android:layout_width="match_parent"
-                        android:layout_height="180dp" />
+                        android:layout_height="200dp"/>
 
             </androidx.cardview.widget.CardView>
 
